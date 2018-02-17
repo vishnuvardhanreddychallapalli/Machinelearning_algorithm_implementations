@@ -1,0 +1,42 @@
+def fit(x,y):
+    #step1 calculate slope i.e m value:
+    m=(np.mean(x*y)-(x.mean()*y.mean()))/(np.mean(x*x)-np.mean(x)**2)
+    c=(y.mean()-m*(x.mean()))
+    return (m,c)
+
+
+def predict(x,m,c):
+    y=m*x+c
+    return y
+
+
+def cost(y,ypredicted):
+    return (np.sum(np.square(ypredicted-y)))
+    
+
+def coeff_of_determination(ypredict,y):
+    u=(np.sum((y-ypredict)**2))
+    v=(np.sum((y-y.mean())**2))
+    print("The values of u is {} and v is {}".format(u,v))
+    return(1-(u/v))
+    
+
+
+
+import numpy as np
+from sklearn import linear_model
+xtrain=np.array([1,2,3,4,5,6,7,8,9,10,11,12,13])
+ytrain=np.array([1,4,9,16,25,36,49,64,81,100,121,144,169])
+m,c=fit(xtrain,ytrain)
+x_test=np.array([11,2,3,25,7,12])
+y_test=np.array([121,4,9,625,49,144])
+print("The line of regression is y={}*x+{}".format(m,c))
+y_predicted=predict(x_test,m,c)
+alg1=linear_model.LinearRegression()
+alg1.fit(xtrain.reshape(-1,1),ytrain)
+print("The line given by sklearn is {}*x+{}".format(alg1.coef_,alg1.intercept_))
+
+mean_square_error=cost(y_test,y_predicted)
+print("The mean test error is:"+str(mean_square_error))
+print("The score or coefficient of determination is:{}".format(coeff_of_determination(y_predicted,y_test)))
+print("The predicted values are"+str(y_predicted))
